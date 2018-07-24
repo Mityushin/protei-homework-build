@@ -10,7 +10,13 @@
     <version>1.0</version>
     <modules>
         <module>homework-01</module>
+        <module>homework-02</module>
     </modules>
+
+    <properties>
+        <maven.compiler.source>1.10</maven.compiler.source>
+        <maven.compiler.target>1.10</maven.compiler.target>
+    </properties>
 
 
 </project>
