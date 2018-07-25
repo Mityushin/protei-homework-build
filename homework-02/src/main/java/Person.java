@@ -8,6 +8,13 @@ public class Person {
     public Person() {
     }
 
+    public Person(Person person) {
+        this.name = person.getName();
+        this.sex = person.getSex();
+        this.age = person.getAge();
+        this.phone = person.getPhone();
+    }
+
     public String getName() {
         return name;
     }

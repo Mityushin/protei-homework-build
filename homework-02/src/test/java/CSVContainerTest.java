@@ -1,5 +1,7 @@
+import org.junit.Before;
+import org.junit.BeforeClass;
+
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -8,15 +10,12 @@ import static org.junit.Assert.*;
 
 public class CSVContainerTest {
 
-    private CSVContainer container;
-    private List<Person> persons;
-    private Person testPerson;
+    private static CSVContainer container;
+    private static List<Person> persons;
+    private static Person testPerson;
 
-    private Field field;
-
-    public CSVContainerTest() throws Exception {
-        container = new CSVContainer();
-
+    @BeforeClass
+    public static void setUpClass() {
         testPerson = new Person()
                 .setName("Дмитрий")
                 .setSex("м")
@@ -40,8 +39,12 @@ public class CSVContainerTest {
                 .setPhone("+3(456)789-01-23")
         );
 
-        field = container.getClass().getDeclaredField("data");
-        field.setAccessible(true);
+        container = new CSVContainer();
+    }
+
+    @Before
+    public void setUp() {
+        container.setData(new ArrayList<>(persons));
     }
 
     @org.junit.Test
@@ -58,76 +61,38 @@ public class CSVContainerTest {
     }
 
     @org.junit.Test
-    public void removePerson() throws IllegalAccessException {
-        List<Person> compareList = new ArrayList<Person>(persons);
-        List<Person> injectIntoContainerList = new ArrayList<Person>(persons);
-
-        field.set(container, injectIntoContainerList);
-
-        compareList.remove(testPerson);
+    public void removePerson() {
         container.removePerson(testPerson);
 
-        Iterator<Person> iter = compareList.iterator();
-        for (Person person : container.getData()) {
-            if (!person.equals(iter.next())) {
-                fail("Found difference in removing");
-            }
-        }
+        assertFalse(container.getData().contains(testPerson));
     }
 
     @org.junit.Test
-    public void removeAll() throws IllegalAccessException {
-        List<Person> compareList = new ArrayList<>(persons);
-        List<Person> injectIntoContainerList = new ArrayList<>(persons);
-
-        field.set(container, injectIntoContainerList);
-
+    public void removeAll() {
         List<Person> forRemoving = new ArrayList<>();
 
-        for (Person person : compareList) {
-            if (person.getAge() < 30) {
-                forRemoving.add(person);
-            }
-        }
-        compareList.removeAll(forRemoving);
-
-        forRemoving.clear();
         for (Person person : container.getData()) {
             if (person.getAge() < 30) {
                 forRemoving.add(person);
             }
         }
-        container.removeAll(forRemoving);
+        assertTrue(container.removeAll(forRemoving));
 
-        Iterator<Person> iter = compareList.iterator();
-        for (Person person : container.getData()) {
-            if (!person.equals(iter.next())) {
-                fail("Found difference in removing all");
-            }
+        List<Person> data = container.getData();
+
+        for (Person person : forRemoving) {
+            assertFalse("Found unextracted data", data.contains(person));
         }
     }
 
     @org.junit.Test
-    public void modifyPerson() throws IllegalAccessException {
-        List<Person> compareList = new ArrayList<>(persons);
-        List<Person> injectIntoContainerList = new ArrayList<>(persons);
+    public void modifyPerson() {
+        Person newPerson = new Person(testPerson)
+                .setAge(testPerson.getAge() + 100);
 
-        field.set(container, injectIntoContainerList);
-
-        Person newPerson = new Person()
-                .setName(testPerson.getName())
-                .setSex(testPerson.getSex())
-                .setAge(testPerson.getAge() + 100)
-                .setPhone(testPerson.getPhone());
-
-        compareList.set(compareList.indexOf(testPerson), newPerson);
         container.modifyPerson(testPerson, newPerson);
 
-        Iterator<Person> iter = compareList.iterator();
-        for (Person person : container.getData()) {
-            if (!person.equals(iter.next())) {
-                fail("Found difference in removing all");
-            }
-        }
+        assertFalse(container.getData().contains(testPerson));
+        assertTrue(container.getData().contains(newPerson));
     }
 }
