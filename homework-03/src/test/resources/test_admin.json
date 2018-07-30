@@ -1,0 +1,1 @@
+{"ru.protei.serialization.User":{"id":{"@class":"string","$":"1"},"name":"admin","eventLogger":{"@class":"ru.protei.serialization.AdminLogger","id":"ADMIN_LOGGER"}}}
