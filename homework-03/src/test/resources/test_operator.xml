@@ -1,1 +1,19 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?><User><id xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="xs:int">1</id><name>operator</name><EventLogger/><creator><id xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="xs:string">1</id><name>admin</name><EventLogger><id>ADMIN_LOGGER</id></EventLogger></creator></User>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<User>
+    <id xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="xs:int">1</id>
+    <name>operator</name>
+    <OperatorLogger/>
+    <folders>
+        <folder>folder31</folder>
+        <folder>folder32</folder>
+    </folders>
+    <creator>
+        <id xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="xs:string">1</id>
+        <name>admin</name>
+        <AdminLogger/>
+        <folders>
+            <folder>folder1</folder>
+            <folder>folder2</folder>
+        </folders>
+    </creator>
+</User>

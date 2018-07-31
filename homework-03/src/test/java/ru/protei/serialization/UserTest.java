@@ -16,6 +16,7 @@ import javax.xml.bind.Unmarshaller;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Arrays;
 
 import static org.junit.Assert.*;
 
@@ -31,7 +32,7 @@ public class UserTest {
             .setId("1")
             .setName("admin")
             .setPassword("password")
-            .setFolders(null)
+            .setFolders(Arrays.asList("folder1", "folder2"))
             .setCreator(null)
             .setEventLogger(new AdminLogger());
 
@@ -39,19 +40,16 @@ public class UserTest {
             .setId(1)
             .setName("operator")
             .setPassword("password")
-            .setFolders(null)
+            .setFolders(Arrays.asList("folder31", "folder32"))
             .setCreator(ADMIN)
             .setEventLogger(new OperatorLogger());
 
 
     @BeforeClass
     public static void setUpClass() throws Exception {
-        JAXBContext context = JAXBContext.newInstance(
-                User.class,
-                AdminLogger.class,
-                OperatorLogger.class
-        );
+        JAXBContext context = JAXBContext.newInstance(User.class);
         Marshaller marshaller = context.createMarshaller();
+        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
         try (ByteArrayOutputStream byteStream = new ByteArrayOutputStream()) {
 
@@ -96,6 +94,7 @@ public class UserTest {
 
         JAXBContext context = JAXBContext.newInstance(User.class);
         Marshaller marshaller = context.createMarshaller();
+        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
         try (ByteArrayOutputStream byteStream = new ByteArrayOutputStream()) {
 
@@ -116,11 +115,7 @@ public class UserTest {
     @Test
     public void deserializeJAXB() throws JAXBException, IOException {
 
-        JAXBContext context = JAXBContext.newInstance(
-                User.class,
-                AdminLogger.class,
-                OperatorLogger.class
-        );
+        JAXBContext context = JAXBContext.newInstance(User.class);
         Unmarshaller unmarshaller = context.createUnmarshaller();
 
         try (InputStream inputStream = UserTest.class.getResourceAsStream("/" + FILE_NAME_ADMIN_XML)) {
@@ -143,6 +138,7 @@ public class UserTest {
 //        XStream xstream = new XStream(new JsonHierarchicalStreamDriver());
         XStream xstream = new XStream(new JettisonMappedXmlDriver());
 
+        xstream.autodetectAnnotations(true);
         try (PrintWriter writer = new PrintWriter(FILE_NAME, "UTF-8")) {
             writer.print(xstream.toXML(ADMIN));
         }

@@ -1,12 +1,7 @@
 package ru.protei.serialization;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-
-@XmlRootElement(name = "AdminLogger")
 public class AdminLogger extends EventLogger {
 
-    @XmlElement(name = "id")
     private EventLoggerIdEnum id = EventLoggerIdEnum.ADMIN_LOGGER;
 
     @Override

@@ -5,7 +5,6 @@ import javax.xml.bind.annotation.*;
 
 @XmlRootElement(name = "User")
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlSeeAlso({EventLogger.class})
 public class User<T> {
 
     @XmlElement(name = "id")
@@ -17,12 +16,13 @@ public class User<T> {
     private transient String password;
 
     @XmlElements({
-            @XmlElement(name = "EventLogger", type = AdminLogger.class),
-            @XmlElement(name = "EventLogger", type = OperatorLogger.class)
+            @XmlElement(name = "AdminLogger", type = AdminLogger.class),
+            @XmlElement(name = "OperatorLogger", type = OperatorLogger.class)
     })
     private EventLogger eventLogger;
 
-    @XmlElement(name = "folders")
+    @XmlElementWrapper
+    @XmlElement(name = "folder")
     private List<String> folders;
 
     @XmlElement(name = "creator")

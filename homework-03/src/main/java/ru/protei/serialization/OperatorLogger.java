@@ -1,8 +1,5 @@
 package ru.protei.serialization;
 
-import javax.xml.bind.annotation.XmlRootElement;
-
-@XmlRootElement(name = "OperatorLogger")
 public class OperatorLogger extends EventLogger {
 
     private EventLoggerIdEnum id = EventLoggerIdEnum.OPERATOR_LOGGER;
