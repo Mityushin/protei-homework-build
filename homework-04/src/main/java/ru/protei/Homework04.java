@@ -37,12 +37,12 @@ public class Homework04 {
 
         for (Field field : clazz.getDeclaredFields()) {
             if (field.isAnnotationPresent(AllowMagicComment.class)) {
-                System.out.println(field.toString() + field.getAnnotation(AllowMagicComment.class).toString());
+                System.out.println(field.toString() + field.getAnnotation(AllowMagicComment.class).value());
             }
         }
         for (Method method : clazz.getDeclaredMethods()) {
             if (method.isAnnotationPresent(AllowMagicComment.class)) {
-                System.out.println(method.toString() + method.getAnnotation(AllowMagicComment.class).toString());
+                System.out.println(method.toString() + method.getAnnotation(AllowMagicComment.class).value());
             }
         }
 
@@ -59,10 +59,14 @@ public class Homework04 {
     private static void printGenericFieldsAndMethods(Object object) {
 
         for (Field field : object.getClass().getDeclaredFields()) {
-            System.out.println(field.getName() + " " + field.getGenericType().getTypeName());
+            if (!field.getType().equals(field.getGenericType())) {
+                System.out.println(field.getName() + " " + field.getGenericType().getTypeName());
+            }
         }
         for (Method method : object.getClass().getDeclaredMethods()) {
-            System.out.println(method.getName() + " " + method.getGenericReturnType().getTypeName());
+            if (!method.getReturnType().equals(method.getGenericReturnType())) {
+                System.out.println(method.getName() + " " + method.getGenericReturnType().getTypeName());
+            }
         }
 
     }
