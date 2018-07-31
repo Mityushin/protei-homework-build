@@ -8,45 +8,37 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PersonDAO {
+public class PersonDAO implements CRUD<Person> {
     private static final Logger log = Logger.getLogger(PersonDAO.class);
 
-    private static PersonDAO instance;
     private DBConnectionManager dbConnectionManager;
 
     private static final String SQL_TABLE_COLUMN_ID = "ID";
     private static final String SQL_TABLE_COLUMN_NAME = "NAME";
-    private static final String SQL_CREATE_TABLE_WORD = "CREATE TABLE PERSON (" +
+    private static final String SQL_CREATE_TABLE_PERSON = "CREATE TABLE PERSON (" +
             "ID INTEGER NOT NULL AUTO_INCREMENT, " +
-            "NAME VARCHAR(20) NOT NULL";
+            "NAME VARCHAR(20) NOT NULL)";
     private static final String SQL_FIND_PERSON_BY_NAME = "SELECT * FROM PERSON WHERE PERSON.NAME = ?";
     private static final String SQL_CREATE_PERSON = "INSERT INTO PERSON (NAME) VALUES (?)";
     private static final String SQL_UPDATE_PERSON_NAME_BY_ID = "UPDATE PERSON SET PERSON.NAME = ? WHERE PERSON.ID = ?";
     private static final String SQL_DELETE_PERSON_BY_ID = "DELETE FROM PERSON WHERE PERSON.ID = ?";
     private static final String SQL_CHECK_EXISTS_BY_ID = "SELECT * FROM PERSON WHERE PERSON.ID = ?";
 
-    private PersonDAO() {
+    public PersonDAO(DBConnectionManager dbConnectionManager) {
 
-        dbConnectionManager = DBConnectionManager.getInstance();
+        this.dbConnectionManager = dbConnectionManager;
 
         try {
-            Connection connection = dbConnectionManager.getConnection();
+            Connection connection = this.dbConnectionManager.getConnection();
 
             Statement stmt = connection.createStatement();
 
-            stmt.executeUpdate(SQL_CREATE_TABLE_WORD);
+            stmt.executeUpdate(SQL_CREATE_TABLE_PERSON);
             log.info("Table PERSON created");
 
         } catch (SQLException e) {
             log.fatal("Can't create table PERSON", e);
         }
-    }
-
-    public static PersonDAO getInstance() {
-        if (instance == null) {
-            instance = new PersonDAO();
-        }
-        return instance;
     }
 
     public boolean create(Person person) {

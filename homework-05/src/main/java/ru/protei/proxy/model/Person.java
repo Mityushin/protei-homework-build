@@ -1,8 +1,11 @@
 package ru.protei.proxy.model;
 
 public class Person {
-    private final int id;
+    private int id;
     private String name;
+
+    public Person() {
+    }
 
     public Person(int id) {
         this.id = id;
@@ -10,6 +13,11 @@ public class Person {
 
     public int getId() {
         return id;
+    }
+
+    public Person setId(int id) {
+        this.id = id;
+        return this;
     }
 
     public String getName() {

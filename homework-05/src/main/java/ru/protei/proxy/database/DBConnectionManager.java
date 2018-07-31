@@ -15,16 +15,8 @@ public class DBConnectionManager {
     private static final String JDBC_PASSWORD = "";
 
     private Connection connection;
-    private static DBConnectionManager instance;
 
-    private DBConnectionManager() {
-    }
-
-    public static DBConnectionManager getInstance() {
-        if (instance == null) {
-            instance = new DBConnectionManager();
-        }
-        return instance;
+    public DBConnectionManager() {
     }
 
     public Connection getConnection() {
