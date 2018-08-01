@@ -26,10 +26,10 @@ public class TimingDynamicInvocationHandler implements InvocationHandler {
 
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 
-        Method targerMethod = methods.get(method.getName());
+        Method targetMethod = methods.get(method.getName());
 
         if (method.isAnnotationPresent(LogTimingMetric.class)
-                || targerMethod.isAnnotationPresent(LogTimingMetric.class)) {
+                || targetMethod.isAnnotationPresent(LogTimingMetric.class)) {
 
             log.info("Invoked method: " + method.getName());
             long startTime = System.nanoTime();
