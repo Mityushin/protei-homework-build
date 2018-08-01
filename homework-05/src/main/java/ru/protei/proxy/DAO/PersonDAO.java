@@ -1,6 +1,7 @@
 package ru.protei.proxy.DAO;
 
 import org.apache.log4j.Logger;
+import ru.protei.proxy.annotation.LogTimingMetric;
 import ru.protei.proxy.database.DBConnectionManager;
 import ru.protei.proxy.model.Person;
 
@@ -41,6 +42,7 @@ public class PersonDAO implements CRUD<Person> {
         }
     }
 
+    @LogTimingMetric
     public boolean create(Person person) {
         try {
             Connection connection = dbConnectionManager.getConnection();

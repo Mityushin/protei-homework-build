@@ -1,6 +1,8 @@
 package ru.protei.proxy;
 
 import org.apache.log4j.Logger;
+import ru.protei.proxy.DAO.PersonDAO;
+import ru.protei.proxy.annotation.LogTimingMetric;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -24,14 +26,22 @@ public class TimingDynamicInvocationHandler implements InvocationHandler {
 
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 
-        log.info("Invoked method: " + method.getName());
-        long startTime = System.nanoTime();
+        Method targerMethod = methods.get(method.getName());
 
-        Object result = method.invoke(target, args);
+        if (method.isAnnotationPresent(LogTimingMetric.class)
+                || targerMethod.isAnnotationPresent(LogTimingMetric.class)) {
 
-        long time = System.nanoTime() - startTime;
-        log.info("Executing " + method.getName() + " finished in " + time + " ns");
+            log.info("Invoked method: " + method.getName());
+            long startTime = System.nanoTime();
 
-        return result;
+            Object result = method.invoke(target, args);
+
+            long time = System.nanoTime() - startTime;
+            log.info("Executing " + method.getName() + " finished in " + time + " ns");
+
+            return result;
+        }
+
+        return method.invoke(target, args);
     }
 }

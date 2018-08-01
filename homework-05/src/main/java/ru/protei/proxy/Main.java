@@ -16,15 +16,15 @@ public class Main {
     private static final Person BOY = new Person()
             .setName("Alex");
 
-    private CRUD personDAO;
+    private CRUD<Person> proxyInstancePersonDAO;
 
-    public Main(CRUD personDAO) {
-        this.personDAO = personDAO;
+    public Main(CRUD<Person> proxyInstancePersonDAO) {
+        this.proxyInstancePersonDAO = proxyInstancePersonDAO;
     }
 
     public void run() {
-        personDAO.create(BOY);
-        personDAO.update(BOY.setName("Gerda"));
+        log.info("create() return " + proxyInstancePersonDAO.create(BOY));
+        log.info("update() return " + proxyInstancePersonDAO.update(BOY.setName("Gerda")));
     }
 
     public static void main(String[] args) {
