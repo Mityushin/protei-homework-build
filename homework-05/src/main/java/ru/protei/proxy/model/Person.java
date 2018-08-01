@@ -7,6 +7,11 @@ public class Person {
     public Person() {
     }
 
+    public Person(Person person) {
+        this.id = person.id;
+        this.name = person.name;
+    }
+
     public Person(int id) {
         this.id = id;
     }

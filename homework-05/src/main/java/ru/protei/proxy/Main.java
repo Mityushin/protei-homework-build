@@ -24,7 +24,8 @@ public class Main {
 
     public void run() {
         log.info("create() return " + proxyInstancePersonDAO.create(BOY));
-        log.info("update() return " + proxyInstancePersonDAO.update(BOY.setName("Gerda")));
+        log.info("update() return " + proxyInstancePersonDAO.update(new Person(BOY).setName("Gerda")));
+        log.info("delete() return " + proxyInstancePersonDAO.delete(BOY));
     }
 
     public static void main(String[] args) {

@@ -22,7 +22,7 @@ public class PersonDAO implements CRUD<Person> {
     private static final String SQL_FIND_PERSON_BY_NAME = "SELECT * FROM PERSON WHERE PERSON.NAME = ?";
     private static final String SQL_CREATE_PERSON = "INSERT INTO PERSON (NAME) VALUES (?)";
     private static final String SQL_UPDATE_PERSON_NAME_BY_ID = "UPDATE PERSON SET PERSON.NAME = ? WHERE PERSON.ID = ?";
-    private static final String SQL_DELETE_PERSON_BY_ID = "DELETE FROM PERSON WHERE PERSON.ID = ?";
+    private static final String SQL_DELETE_PERSON_BY_NAME = "DELETE FROM PERSON WHERE PERSON.NAME = ?";
     private static final String SQL_CHECK_EXISTS_BY_ID = "SELECT * FROM PERSON WHERE PERSON.ID = ?";
 
     public PersonDAO(DBConnectionManager dbConnectionManager) {
@@ -106,9 +106,9 @@ public class PersonDAO implements CRUD<Person> {
         try {
             Connection connection = dbConnectionManager.getConnection();
 
-            PreparedStatement pstmt = connection.prepareStatement(SQL_DELETE_PERSON_BY_ID);
+            PreparedStatement pstmt = connection.prepareStatement(SQL_DELETE_PERSON_BY_NAME);
 
-            pstmt.setString(1, String.valueOf(person.getId()));
+            pstmt.setString(1, String.valueOf(person.getName()));
 
             return pstmt.executeUpdate() != 0;
 
