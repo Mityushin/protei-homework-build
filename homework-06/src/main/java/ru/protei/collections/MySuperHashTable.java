@@ -3,7 +3,7 @@ package ru.protei.collections;
 import java.util.Arrays;
 import java.util.Map;
 
-public class MySuperHashTable<K, V> implements SuperMap<K, V>, HashFunctionChangeable {
+public class MySuperHashTable<K, V> implements SuperMap<K, V>, HashFunctionChangeable<K> {
 
     private static final int DEFAULT_CAPACITY = 89;
 
@@ -21,7 +21,7 @@ public class MySuperHashTable<K, V> implements SuperMap<K, V>, HashFunctionChang
 
     private Entry<K, V>[] table;
 
-    private HashFunction hashFunc;
+    private HashFunction<K> hashFunc;
 
     public MySuperHashTable() {
         this(DEFAULT_CAPACITY, MySuperHashTable::DEFAULT_HASH_FUNC_0);
@@ -31,11 +31,11 @@ public class MySuperHashTable<K, V> implements SuperMap<K, V>, HashFunctionChang
         this(capacity, MySuperHashTable::DEFAULT_HASH_FUNC_0);
     }
 
-    public MySuperHashTable(HashFunction function) {
+    public MySuperHashTable(HashFunction<K> function) {
         this(DEFAULT_CAPACITY, function);
     }
 
-    public MySuperHashTable(int capacity, HashFunction function) {
+    public MySuperHashTable(int capacity, HashFunction<K> function) {
         this.capacity = capacity;
         this.size = 0;
         this.loadFactor = 0;
@@ -52,10 +52,6 @@ public class MySuperHashTable<K, V> implements SuperMap<K, V>, HashFunctionChang
     }
 
     public double getLoadFactor() {
-        return loadFactor;
-    }
-
-    private double updateLoadFactor() {
         return loadFactor = (double) (size / capacity);
     }
 
@@ -70,8 +66,8 @@ public class MySuperHashTable<K, V> implements SuperMap<K, V>, HashFunctionChang
     }
 
     @Override
-    public V get(Object o) {
-        int hash = hashFunc.apply(o);
+    public V get(K key) {
+        int hash = hashFunc.apply(key);
         MySuperHashTable.Entry<K, V> entry = table[hash];
         return entry != null ? entry.getValue() : null;
     }
@@ -79,7 +75,6 @@ public class MySuperHashTable<K, V> implements SuperMap<K, V>, HashFunctionChang
     @Override
     public V put(K key, V value) {
         size++;
-        updateLoadFactor();
         int hash = hashFunc.apply(key);
         MySuperHashTable.Entry<K, V> entry = table[hash];
         table[hash] = new MySuperHashTable.Entry<K, V>(hash, key, value, entry);
@@ -87,12 +82,11 @@ public class MySuperHashTable<K, V> implements SuperMap<K, V>, HashFunctionChang
     }
 
     @Override
-    public V remove(Object o) {
-        int hash = hashFunc.apply(o);
+    public V remove(K key) {
+        int hash = hashFunc.apply(key);
         MySuperHashTable.Entry<K, V> entry = table[hash];
         if (entry != null) {
             size--;
-            updateLoadFactor();
             table[hash] = entry.next;
         }
         return entry != null ? entry.getValue() : null;
@@ -106,7 +100,7 @@ public class MySuperHashTable<K, V> implements SuperMap<K, V>, HashFunctionChang
     }
 
     @Override
-    public void changeHashFunction(int newCapacity, HashFunction function) {
+    public void changeHashFunction(int newCapacity, HashFunction<K> function) {
 
         Entry<K, V>[] newTable = (Entry<K, V>[]) new Entry[newCapacity];
 
@@ -119,7 +113,6 @@ public class MySuperHashTable<K, V> implements SuperMap<K, V>, HashFunctionChang
         table = newTable;
         hashFunc = function;
         capacity = newCapacity;
-        updateLoadFactor();
     }
 
     @Override

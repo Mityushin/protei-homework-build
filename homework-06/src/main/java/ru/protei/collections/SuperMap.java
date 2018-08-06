@@ -5,11 +5,11 @@ public interface SuperMap<K, V> {
 
     boolean isEmpty();
 
-    V get(Object var1);
+    V get(K key);
 
     V put(K key, V value);
 
-    V remove(Object var1);
+    V remove(K key);
 
     void clear();
 }

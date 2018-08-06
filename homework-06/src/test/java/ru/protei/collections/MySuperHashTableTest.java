@@ -83,9 +83,19 @@ public class MySuperHashTableTest {
         hashTable.put("key", "value");
         hashTable.put("key1", "value1");
         hashTable.put("key2", "value2");
-        System.out.println(hashTable.toString());
+
+        int oldSize = hashTable.size();
+        int oldCapacity = hashTable.getCapacity();
 
         hashTable.changeHashFunction(hashTable.getCapacity() * 2, (o) -> 0);
-        System.out.println(hashTable.toString());
+
+        assertEquals(
+                oldSize,
+                hashTable.size()
+        );
+        assertNotEquals(
+                oldCapacity,
+                hashTable.getCapacity()
+        );
     }
 }
