@@ -5,23 +5,20 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>ru.protei</groupId>
-    <artifactId>protei-homework-build</artifactId>
-    <packaging>pom</packaging>
+    <artifactId>homework-07</artifactId>
     <version>1.0</version>
-    <modules>
-        <module>homework-01</module>
-        <module>homework-02</module>
-        <module>homework-03</module>
-        <module>homework-04</module>
-        <module>homework-05</module>
-        <module>homework-06</module>
-        <module>homework-07</module>
-    </modules>
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
-
 
 </project>
