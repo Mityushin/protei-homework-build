@@ -1,5 +1,8 @@
 package ru.protei.concurrency;
 
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Logger;
+
 import java.io.*;
 import java.nio.file.Paths;
 import java.util.Scanner;
@@ -7,6 +10,7 @@ import java.util.concurrent.*;
 import java.util.regex.Pattern;
 
 public class FileChecker {
+    private static final Logger log = Logger.getLogger(FileChecker.class);
 
     private static final int QUEUE_SIZE = 5;
 
@@ -15,8 +19,8 @@ public class FileChecker {
     private static final int DEFAULT_CHECK_TREAD_COUNT = 4;
     private static final String DEFAULT_REG_EXP = ".*";
 
-    public static final BlockingQueue<String> checkQueue = new ArrayBlockingQueue<>(QUEUE_SIZE);
-    public static final BlockingQueue<String> writeQueue = new ArrayBlockingQueue<>(QUEUE_SIZE);
+    private final BlockingQueue<String> checkQueue = new ArrayBlockingQueue<>(QUEUE_SIZE);
+    private final BlockingQueue<String> writeQueue = new ArrayBlockingQueue<>(QUEUE_SIZE);
 
     private final String file0;
     private final String file1;
@@ -40,6 +44,8 @@ public class FileChecker {
     }
 
     public void run() {
+        BasicConfigurator.configure();
+
         service = Executors.newFixedThreadPool(checkTreadCount + 2);
         service.submit(new Reader(file0));
         service.submit(new Writer(file1));
@@ -53,7 +59,7 @@ public class FileChecker {
         }
     }
 
-    private static class Checker implements Runnable {
+    private class Checker implements Runnable {
 
         private final Pattern pattern;
 
@@ -65,17 +71,18 @@ public class FileChecker {
         public void run() {
             String line;
             try {
-                while ((line = FileChecker.checkQueue.poll(10, TimeUnit.SECONDS)) != null) {
+                while ((line = checkQueue.poll(10, TimeUnit.SECONDS)) != null) {
                     if (pattern.matcher(line).matches()) {
-                        FileChecker.writeQueue.add(line);
+                        writeQueue.add(line);
                     }
                 }
-            } catch (InterruptedException ignored) {
+            } catch (InterruptedException e) {
+                log.fatal("Checker cannot check!", e);
             }
         }
     }
 
-    private static class Reader implements Runnable {
+    private class Reader implements Runnable {
 
         private final String inputFile;
 
@@ -90,14 +97,15 @@ public class FileChecker {
                 String line;
                 while (scanner.hasNextLine()) {
                     line = scanner.nextLine();
-                    FileChecker.checkQueue.add(line);
+                    checkQueue.add(line);
                 }
-            } catch (IOException ignored) {
+            } catch (IOException e) {
+                log.fatal("Reader cannot read!", e);
             }
         }
     }
 
-    private static class Writer implements Runnable {
+    private class Writer implements Runnable {
 
         private final String outputFile;
 
@@ -109,10 +117,11 @@ public class FileChecker {
         public void run() {
             try (PrintWriter out = new PrintWriter(outputFile)) {
                 String line;
-                while ((line = FileChecker.writeQueue.poll(10, TimeUnit.SECONDS)) != null) {
+                while ((line = writeQueue.poll(10, TimeUnit.SECONDS)) != null) {
                     out.println(line);
                 }
-            } catch (Exception ignored) {
+            } catch (Exception e) {
+                log.fatal("Writer cannot write!", e);
             }
         }
     }
