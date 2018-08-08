@@ -93,7 +93,7 @@ public class InMemoryCacheTest {
             List<Future<String>> futureReadList = readService.invokeAll(callableReadList);
 
             for (Future<String> future : futureReadList) {
-                System.out.println(future.get(40000, TimeUnit.SECONDS));
+                future.get(40000, TimeUnit.SECONDS);
             }
         } catch (Exception e) {
             fail(e.getMessage());

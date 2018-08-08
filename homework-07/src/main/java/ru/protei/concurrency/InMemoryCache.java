@@ -52,7 +52,6 @@ public class InMemoryCache<K, V> implements Cache<K, V> {
 
             pages.put(key, value);
             pageAccessTimeQueue.add(node);
-            System.out.println(this);
         }
     }
 
